@@ -1,32 +1,34 @@
 package com.example.mp25_assign3
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
+    private var user: User? = null
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
         val welcome = findViewById<TextView>(R.id.view_Welcome)
-        val username = intent.getStringExtra("username")
-        welcome.text = getString(R.string.welcome_message, username)
-
         val btnLogout = findViewById<Button>(R.id.btnLogout)
+
+        user = intent.getParcelableExtra("user_data", User::class.java)
+        welcome.text = getString(R.string.welcome_message, user?.username ?: "User")
+
         btnLogout.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java).apply {
+                putExtra("user_data", user)
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
             startActivity(intent)
             finish()
         }

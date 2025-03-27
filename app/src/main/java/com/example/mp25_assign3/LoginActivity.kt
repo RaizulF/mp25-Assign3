@@ -1,22 +1,20 @@
 package com.example.mp25_assign3
 
-import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
 
 class LoginActivity : AppCompatActivity() {
-    private var registUser: String? = null
-    private var registEmail: String? = null
-    private var registPw: String? = null
+    private var registeredUser: User? = null
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,20 +25,19 @@ class LoginActivity : AppCompatActivity() {
         val viewPassword = findViewById<TextInputEditText>(R.id.Edit_Password)
         val goToRegister = findViewById<TextView>(R.id.tvRegister)
 
-        registUser = intent.getStringExtra("username")
-        registEmail = intent.getStringExtra("email")
-        registPw = intent.getStringExtra("password")
+        // Ambil data user dari intent
+        registeredUser = intent.getParcelableExtra("user_data", User::class.java)
 
         btnLogin.setOnClickListener {
-            val email = viewEmail.text.toString()
-            val password = viewPassword.text.toString()
+            val inputEmail = viewEmail.text.toString()
+            val inputPassword = viewPassword.text.toString()
 
-            if (email.isEmpty() && password.isEmpty()) {
+            if (inputEmail.isEmpty() || inputPassword.isEmpty()) {
                 showAlert("Error", "Email dan password tidak boleh kosong")
-
-            } else if (email == registEmail && password == registPw){
-                val intent = Intent(this, MainActivity::class.java)
-                intent.putExtra("username", registUser)
+            } else if (inputEmail == registeredUser?.email && inputPassword == registeredUser?.password) {
+                val intent = Intent(this, MainActivity::class.java).apply {
+                    putExtra("user_data", registeredUser) // Kirim user data ke MainActivity
+                }
                 startActivity(intent)
                 finish()
             } else {
@@ -48,14 +45,13 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        goToRegister.setOnClickListener{
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+        goToRegister.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
             finish()
         }
     }
 
-    private fun showAlert(title: String, message: String)  {
+    private fun showAlert(title: String, message: String) {
         AlertDialog.Builder(this)
             .setTitle(title)
             .setMessage(message)

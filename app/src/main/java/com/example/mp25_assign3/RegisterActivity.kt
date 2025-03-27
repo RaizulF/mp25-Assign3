@@ -8,8 +8,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
 
 class RegisterActivity : AppCompatActivity() {
@@ -25,8 +23,7 @@ class RegisterActivity : AppCompatActivity() {
         val backToLogin = findViewById<TextView>(R.id.tvLogin)
 
         backToLogin.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
 
@@ -36,13 +33,13 @@ class RegisterActivity : AppCompatActivity() {
             val password = viewPassword.text.toString()
 
             if (username.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
-                val intent = Intent(this, LoginActivity::class.java)
-                intent.putExtra("username", username)
-                intent.putExtra("email", email)
-                intent.putExtra("password", password)
+                val user = User(username, email, password)
+                val intent = Intent(this, LoginActivity::class.java).apply {
+                    putExtra("user_data", user)
+                }
                 startActivity(intent)
                 finish()
-            }else{
+            } else {
                 Toast.makeText(this, "Semua field harus diisi", Toast.LENGTH_SHORT).show()
             }
         }
