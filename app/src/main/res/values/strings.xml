@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">mp25-Assign3</string>
+    <string name="login_title">Login</string>
+    <string name="register_title">Register</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="haveAcc">Sudah Punya Akun? Login</string>
+    <string name="dontHaveAcc">Belum Punya Akun? Register</string>
+    <string name="buatAkun">Buat Akun</string>
+    <string name="logout">Logout</string>
+    <string name="welcome_message">Welcome, %1$s!</string>
+    <string name="footer">Copyright Raizul Furkon (F1D022024)</string>
+
+</resources>
