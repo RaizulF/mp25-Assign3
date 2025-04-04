@@ -13,6 +13,7 @@ import com.google.android.material.textfield.TextInputEditText
 
 class LoginActivity : AppCompatActivity() {
     private var registeredUser: User? = null
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,22 +24,49 @@ class LoginActivity : AppCompatActivity() {
         val viewEmail = findViewById<TextInputEditText>(R.id.Edit_Email)
         val viewPassword = findViewById<TextInputEditText>(R.id.Edit_Password)
         val goToRegister = findViewById<TextView>(R.id.tvRegister)
+
         registeredUser = intent.getParcelableExtra("user_data", User::class.java)
 
         btnLogin.setOnClickListener {
-            val inputEmail = viewEmail.text.toString()
-            val inputPassword = viewPassword.text.toString()
+            val inputEmail = viewEmail.text.toString().trim()
+            val inputPassword = viewPassword.text.toString().trim()
 
-            if (inputEmail.isEmpty() || inputPassword.isEmpty()) {
-                showAlert("Error", "Email dan password tidak boleh kosong")
-            } else if (inputEmail == registeredUser?.email && inputPassword == registeredUser?.password) {
-                val intent = Intent(this, MainActivity::class.java).apply {
-                    putExtra("user_data", registeredUser)
+            when {
+                inputEmail.isEmpty() && inputPassword.isEmpty() -> {
+                    showAlert("Error", "Semua field harus diisi")
                 }
-                startActivity(intent)
-                finish()
-            } else {
-                showAlert("Error", "Email atau password salah")
+
+                inputEmail.isEmpty() -> {
+                    showAlert("Error", "Email tidak boleh kosong")
+                }
+
+                inputPassword.isEmpty() -> {
+                    showAlert("Error", "Password tidak boleh kosong")
+                }
+
+                !android.util.Patterns.EMAIL_ADDRESS.matcher(inputEmail).matches() -> {
+                    showAlert("Error", "Format email tidak valid")
+                }
+
+                registeredUser == null -> {
+                    showAlert("Error", "Akun belum terdaftar. Silakan daftar terlebih dahulu.")
+                }
+
+                inputEmail != registeredUser?.email -> {
+                    showAlert("Error", "Email tidak ditemukan. Silakan periksa kembali.")
+                }
+
+                inputPassword != registeredUser?.password -> {
+                    showAlert("Error", "Password salah. Silakan coba lagi.")
+                }
+
+                else -> {
+                    val intent = Intent(this, MainActivity::class.java).apply {
+                        putExtra("user_data", registeredUser)
+                    }
+                    startActivity(intent)
+                    finish()
+                }
             }
         }
 

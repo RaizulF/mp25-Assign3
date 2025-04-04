@@ -3,6 +3,7 @@
     <string name="login_title">Login</string>
     <string name="register_title">Register</string>
     <string name="username">Username</string>
+    <string name="passwordRegist">Password (8 – 12 karakter)</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="haveAcc">Sudah Punya Akun? Login</string>
